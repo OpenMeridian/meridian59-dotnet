@@ -15,6 +15,8 @@
 */
 
 using System;
+using System.Windows.Forms;
+using Meridian59.Protocol.GameMessages;
 
 namespace Meridian59.DebugUI.Events
 {
@@ -53,4 +55,5 @@ namespace Meridian59.DebugUI.Events
             this.LogPings = LogPings;
         }
     }
+
 }

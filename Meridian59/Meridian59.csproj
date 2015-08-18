@@ -124,6 +124,8 @@
     <Compile Include="Data\Lists\KeyValuePairStringList.cs" />
     <Compile Include="Data\Lists\MailList.cs" />
     <Compile Include="Data\Lists\RoomObjectListFiltered.cs" />
+    <Compile Include="Data\Models\AdminData\AdminData.cs" />
+    <Compile Include="Data\Models\AdminData\Events\AdminDataEvents.cs" />
     <Compile Include="Data\Models\StatChangeInfo.cs" />
     <Compile Include="Data\Models\CharCreationInfo.cs" />
     <Compile Include="Data\Models\ChatCommand\ChatCommandCast.cs" />
@@ -344,6 +346,8 @@
     <Compile Include="Native\Linux.cs" />
     <Compile Include="Native\Windows.cs" />
     <Compile Include="Native\Wrapper.cs" />
+    <Compile Include="Data\Models\AdminData\AdminObject.cs" />
+    <Compile Include="Data\Models\AdminData\AdminObjectProperty.cs" />
     <Compile Include="Protocol\GameMessages\GameMode\ChangedStatsMessage.cs" />
     <Compile Include="Protocol\GameMessages\GameMode\ReqStatChangeMessage.cs" />
     <Compile Include="Protocol\GameMessages\GameMode\CancelOfferMessage.cs" />
@@ -583,7 +587,9 @@
     <Content Include="zlib\license.txt" />
     <None Include="Resources\Glow.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Protocol\GameMessages\AdminMode\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

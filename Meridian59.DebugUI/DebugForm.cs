@@ -15,6 +15,8 @@
 */
 
 using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Meridian59.Data;
 using Meridian59.DebugUI.Events;
@@ -22,10 +24,13 @@ using Meridian59.Protocol.Events;
 using Meridian59.Protocol.GameMessages;
 using Meridian59.Common.Enums;
 using Meridian59.Data.Models;
+using Meridian59.Data.Models.AdminData;
 using Meridian59.Files;
 
 namespace Meridian59.DebugUI
 {
+
+
     public partial class DebugForm : Form
     {
         public event GameMessageEventHandler PacketSend;
@@ -63,7 +68,34 @@ namespace Meridian59.DebugUI
                 roomInfoView.DataSource = dataController.RoomInformation;
                 lightShadingView.DataSource = dataController.LightShading;
                 backgroundMusicView.DataSource = dataController.BackgroundMusic;
+                DataController.AdminData.AdminObjectAdded += AdminInfoOnAdminObjectAdded;
+                DataController.AdminData.PacketSend += AdminData_PacketSend;
+                DataController.AdminData.LogAdminMessage += AdminData_LogAdminMessage;
             }
+        }
+
+        void AdminData_LogAdminMessage(LogAdminMessageEventHandlerArgs e)
+        {
+            txtAdminOutput.Text = e.AdminMessage + txtAdminOutput.Text;
+        }
+
+        void AdminData_PacketSend(object sender, GameMessageEventArgs e)
+        {
+            if (PacketSend != null)
+                PacketSend(this, e);
+        }
+
+        private void AdminInfoOnAdminObjectAdded(object sender, AddTrackedAdminObjectEventHandlerArgs args)
+        {
+            ObjectEditor oe = new ObjectEditor(args.AdminObject);
+            oe.Closing += oe_Closing;
+            oe.Show();
+        }
+
+        void oe_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            ObjectEditor oe = (ObjectEditor) sender;
+            DataController.AdminData.UntrackAdminObject(oe.GetTrackedObject());
         }
 
         private ResourceManager resourceManager;
@@ -160,5 +192,21 @@ namespace Meridian59.DebugUI
             if (PacketSend != null)
                 PacketSend(this, new GameMessageEventArgs(new UserCommandMessage(new UserCommandGuildDisband(), null)));
         }
+
+        private void txtAdminCommand_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                if (PacketSend != null)
+                    PacketSend(this, new GameMessageEventArgs(new ReqAdminMessage(txtAdminCommand.Text)));
+                txtAdminCommand.Text = "";
+            }
+        }
+
     }
+    
+
+    
+
+    
 }

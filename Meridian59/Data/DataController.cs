@@ -18,6 +18,7 @@ using System;
 using System.ComponentModel;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
+using System.Text.RegularExpressions;
 using Meridian59.Data.Models;
 using Meridian59.Data.Lists;
 using Meridian59.Protocol.GameMessages;
@@ -26,6 +27,7 @@ using Meridian59.Common;
 using Meridian59.Common.Enums;
 using Meridian59.Common.Constants;
 using Meridian59.Common.Interfaces;
+using Meridian59.Data.Models.AdminData;
 using Meridian59.Files.ROO;
 
 // Switch FP precision based on architecture
@@ -719,6 +721,8 @@ namespace Meridian59.Data
                 }
             }
         }
+
+        public AdminData AdminData { get; protected set; }
         #endregion
 
         #region Constructors
@@ -780,6 +784,8 @@ namespace Meridian59.Data
             CharCreationInfo = new CharCreationInfo();
             ObjectContents = new ObjectContents();
             StatChangeInfo = new StatChangeInfo();
+
+            AdminData = new AdminData();
 
             // some values
             ChatMessagesMaximum = 100;
@@ -856,6 +862,7 @@ namespace Meridian59.Data
             CharCreationInfo.Clear(true);
             ObjectContents.Clear(true);
             GuildShieldInfo.Clear(true);
+            AdminData.Clear(true);
             StatChangeInfo.Clear(true);
 
             // reset values/references
@@ -1584,6 +1591,10 @@ namespace Meridian59.Data
                 case MessageTypeGameMode.InvalidateData:            // 228
                     HandleInvalidateData((InvalidateDataMessage)Message);
                     break;
+
+                case MessageTypeGameMode.Admin:
+                    HandleAdminMessage((AdminMessage)Message);
+                    break;
             }
         }
 
@@ -2067,6 +2078,11 @@ namespace Meridian59.Data
                 ChatMessages.Remove(ChatMessages[0]);
 
             ChatMessages.Add(Message.Message);           
+        }
+
+        protected void HandleAdminMessage(AdminMessage Message)
+        {
+            AdminData.HandleAdminMessage(Message);
         }
 
         protected void HandleCharInfoNotOKMessage(CharInfoNotOkMessage Message)
